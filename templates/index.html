@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Redirect</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family:Verdana, Geneva, Tahoma, sans-serif;
+            background-color: #f4f4f4; /* Set a background color */
+        }
+
+        header .nav {
+            display: flex;
+            justify-content: space-between;
+            background-color: rgb(2, 72, 100);
+            padding: 10px 20px; /* Added padding */
+            align-items: center; /* Center align items vertically */
+        }
+
+        header .nav h1 {
+            font-size: 30px;
+            color: aliceblue;
+            margin: 0;
+        }
+
+        header .nav nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        header .nav a {
+            font-size: 20px;
+            font-weight: bold;
+            color: aliceblue;
+            margin: 0;
+        }
+
+        header .nav p:hover{
+            text-decoration: underline;
+        }
+
+        .container {
+            margin: 20px auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .algorithm {
+            flex: 0 1 calc(50% - 20px); /* Two algorithms per row */
+            background-color: linear-grid #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .algorithm:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transform: scale(0.96);
+            background-image: linear-gradient(90deg, rgb(151, 185, 203), rgb(119, 172, 195));
+
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            background-color: rgb(33, 86, 115); /* Button color */
+            color: #fff; /* Text color */
+        }
+
+        /* button:hover {
+            background-color: rgb(99, 156, 185); Darken button color on hover */
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav">
+            <h1>Operating System</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="#">About Us</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="algorithm">
+            <h2>Shortest Remaining Time Next</h2>
+            <p>Shortest Remaining Time Next</p>
+            <button onclick="redirect('/SRTN')">Stimulate</button>
+        </div>
+
+        <div class="algorithm">
+            <h2>Producer-Consumer</h2>
+            <P>Producer-consumer bounded buffer problem with monitors</P>
+            <button onclick="redirect('/Proucer-Consumer')">Stimulate</button>
+        </div>
+
+        <div class="algorithm">
+            <h2>Optimal Page Replacement Algorithm</h2>
+            <p>Description of Optimal Page Replacement Algorithm...</p>
+            <button onclick="redirect('/OPR')">Stimulate</button>
+        </div>
+
+        <div class="algorithm">
+            <h2>Shortest seek time first (SSTF) disk scheduling Algorithm</h2>
+            <p>Description of Algorithm 4...</p>
+            <button onclick="redirect('/SSTF')">Button 4</button>
+        </div>
+    </div>
+
+    <script>
+        function redirect(route) {
+            window.location.href = route;
+        }
+    </script>
+</body>
+</html>

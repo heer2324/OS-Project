@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRTN Simulation Input</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family:Verdana, Geneva, Tahoma, sans-serif;
+            background-color: #f4f4f4; /* Set a background color */
+        }
+
+        header .nav {
+            display: flex;
+            justify-content: space-between;
+            background-color: rgb(2, 72, 100);
+            padding: 10px 20px; /* Added padding */
+            align-items: center; /* Center align items vertically */
+        }
+
+        header .nav h1 {
+            font-size: 30px;
+            color: aliceblue;
+            margin: 0;
+        }
+
+        header .nav nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        header .nav a {
+            font-size: 20px;
+            font-weight: bold;
+            color: aliceblue;
+            margin: 0;
+        }
+
+        header .nav p:hover{
+            text-decoration: underline;
+        }
+
+        body h1{
+            display:center;
+            margin-left: 500px;
+            font-size: 30px;
+            color: rgb(10, 57, 75);
+        }
+
+        body h2{
+            display:center;
+            margin: 10px;
+            font-size:20px;
+            color: rgb(10, 57, 75);
+        }
+
+        label{
+            display: center;
+            margin: 10px;
+            font-size: 20px;
+            color: rgb(10, 57, 75);
+        }
+
+        input[type="number"]{
+            display: center;
+            margin: 10px;
+            font-size: 20px;
+            color: rgb(10, 57, 75);
+        }
+
+        .chart {
+            margin-top: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .task {
+            fill: rgb(52, 123, 182);
+        }
+        .task-text {
+            fill: white;
+            font-size: 12px;
+        }
+        .axis-text {
+            font-size: 10px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 70%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 5px;
+        }
+
+        input[type="submit"] {
+            background-color: rgb(33, 86, 115); /* Button color */
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 20px;
+            margin-left: 20px;
+            cursor: pointer;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="nav">
+            <h1>SRTN Algorithm</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="About Us">About Us</a>
+            </nav>
+        </div>
+    </header>
+
+    <h1>SRTN Algorithm Simulation Input</h1>
+    <form action="/SRTN" method="post">
+        <label for="n">Enter the number of processes (n):</label><br>
+        <input type="number" id="n" name="n" required><br>
+
+        <h2>Enter process details:</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Process Name</th>
+                    <th>Arrival Time</th>
+                    <th>Burst Time</th>
+                </tr>
+            </thead>
+            <tbody id="process_table">
+                <!-- Table rows will be dynamically added based on user input -->
+            </tbody>
+        </table>
+
+        <input type="submit" value="Submit">
+    </form>
+    
+
+    <div id="chart" class="chart">
+        <script>
+            document.querySelector('#n').addEventListener('input', function() {
+                let n = parseInt(this.value);
+                let tableBody = document.getElementById('process_table');
+                tableBody.innerHTML = '';
+
+                for (let i = 0; i < n; i++) {
+                    let row = `<tr>
+                                <td>P${i}</td>
+                                <td><input type="number" name="arrival_time_${i}" required></td>
+                                <td><input type="number" name="burst_time_${i}" required></td>
+                            </tr>`;
+                    tableBody.innerHTML += row;
+                }
+            });
+        </script>
+    </div>
+    
+</body>
+</html>

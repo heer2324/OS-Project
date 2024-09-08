@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Request Sequence</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>Request Sequence</h1>
+    
+    <h2>Sequence of Executed Requests:</h2>
+    <ul>
+        {% for request in sequence %}
+            <li>{{ request }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Total Seek Time: {{ total_seek_time }}</h2>
+
+    <h2>Graph of Request Sequence:</h2>
+    <div id="graph"><img src="{{ url_for('static', filename='graph.png') }}" alt="Graph"></div>
+
+    <script>
+        // Define data for the graph
+        var sequence = JSON.parse('{{ sequence | tojson | safe }}');
+        
+        // Define data for the graph
+        var data = [{
+            x: sequence,
+            type: 'bar'
+        }];
+        
+        // Define layout for the graph
+        var layout = {
+            title: 'Request Sequence',
+            xaxis: {
+                title: 'Request'
+            },
+            yaxis: {
+                title: 'Seek Time'
+            }
+        };
+    </script>
+</body>
+</html>

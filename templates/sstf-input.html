@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimal Page Replacement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 20px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Optimal Page Replacement</h1>
+    <form action="/SSTF" method="post">
+        <label for="position">Enter current position:</label>
+        <input type="number" name="position" id="position" min="1">
+        <div>
+            <label for="requests">Enter number of requests:</label>
+            <input type="number" name="requests" id="requests" min="1">
+            <div id="page-inputs-container"></div>
+        </div>
+        <button id="submit-btn">Submit</button>
+    </form>
+    <script>
+
+        document.getElementById('requests').addEventListener('input', function() {
+            const pages = this.value;
+            const pageInputsContainer = document.getElementById('page-inputs-container');
+            pageInputsContainer.innerHTML = '';
+            for (let i = 1; i <= pages; i++) {
+                const label = document.createElement('label');
+                label.textContent = `Enter track ${i}:`;
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.name = `track-${i}`;
+                input.min = '1';
+                pageInputsContainer.appendChild(label);
+                pageInputsContainer.appendChild(input);
+            }
+        });
+    </script>
+</body>
+</html>

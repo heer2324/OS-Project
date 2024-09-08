@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRTN Simulation Input</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family:Verdana, Geneva, Tahoma, sans-serif;
+            background-color: #f4f4f4; /* Set a background color */
+        }
+
+        header .nav {
+            display: flex;
+            justify-content: space-between;
+            background-color: rgb(2, 72, 100);
+            padding: 10px 20px; /* Added padding */
+            align-items: center; /* Center align items vertically */
+        }
+
+        header .nav h1 {
+            font-size: 30px;
+            color: aliceblue;
+            margin: 0;
+        }
+
+        header .nav nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        header .nav a {
+            font-size: 20px;
+            font-weight: bold;
+            color: aliceblue;
+            margin: 0;
+        }
+
+        header .nav p:hover{
+            text-decoration: underline;
+        }
+
+        body h2{
+            display:center;
+            margin: 10px;
+            font-size:20px;
+            color: rgb(10, 57, 75);
+        }
+
+        .chart {
+            margin-top: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .task {
+            fill: steelblue;
+        }
+        .task-text {
+            fill: white;
+            font-size: 12px;
+        }
+        .axis-text {
+            font-size: 10px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 70%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 5px;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        
+    </style>
+</head>
+    <body>
+
+    <header>
+        <div class="nav">
+            <h1>Operating System</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="#">About Us</a>
+            </nav>
+        </div>
+    </header>
+
+        <h2>Summary Table</h2>
+    <table id="summary_table">
+        <thead>
+            <tr>
+                <th>Process Name</th>
+                <th>Arrival Time</th>
+                <th>Burst Time</th>
+                <th>Completion Time</th>
+                <th>Turnaround Time</th>
+                <th>Waiting Time</th>
+            </tr>
+        </thead>
+        <tbody id="summary_body">
+            {% for i in range(arrival_times | length) %}
+            <tr>
+                <td>P{{ i }}</td>
+                <td>{{ arrival_times[i] }}</td>
+                <td>{{ burst_times[i] }}</td>
+                <td>{{ completion_times[i] }}</td>
+                <td>{{ turnaround_times[i] }}</td>
+                <td>{{ waiting_times[i] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div id="avg_times">
+    <h2>Average Times</h2>
+    <p>Average Waiting Time: {{ avg_waiting_time }}</p>
+    <p>Average Turnaround Time: {{ avg_turnaround_time }}</p>
+    </div>
+
+    <div id="chart" class="chart">
+        <!-- Will be added by js function -->
+    </div>
+
+    <script>
+        // Given string
+        const inputString = "{{ gantt_string }}";
+        
+        // Function to parse the input string and create Gantt chart
+        function createGanttChart(inputString) {
+            const processData = inputString.split(' ');
+            const chartData = [];
+
+            let currentProcess = processData[0];
+            let startTime = 0;
+
+            for (let i = 1; i < processData.length; i++) {
+                if (processData[i] !== currentProcess) {
+                    chartData.push({
+                        process: currentProcess,
+                        startTime: startTime,
+                        endTime: i
+                    });
+                    currentProcess = processData[i];
+                    startTime = i;
+                }
+            }
+
+            // Add the last process
+            chartData.push({
+                process: currentProcess,
+                startTime: startTime,
+                endTime: processData.length
+            });
+
+            // Set up SVG dimensions
+            const margin = { top: 20, right: 30, bottom: 50, left: 60 };
+            const width = 800 - margin.left - margin.right;
+            const height = 200 - margin.top - margin.bottom;
+
+            // Create SVG
+            const svg = d3.select("#chart")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            // Define scales
+            const x = d3.scaleLinear().domain([0, processData.length]).range([0, width]);
+            const y = d3.scaleBand().domain(processData).range([0, height]);
+
+            // Draw rectangles
+            svg.selectAll(".task")
+                .data(chartData)
+                .enter().append("rect")
+                .attr("class", "task")
+                .attr("x", d => x(d.startTime))
+                .attr("y", d => y(d.process))
+                .attr("width", d => x(d.endTime - d.startTime))
+                .attr("height", y.bandwidth());
+
+            // Add process labels
+            svg.selectAll(".task-text")
+                .data(chartData)
+                .enter().append("text")
+                .attr("class", "task-text")
+                .attr("x", d => x(d.startTime) + 5)
+                .attr("y", d => y(d.process) + 15)
+                .text(d => d.process);
+
+            // Add x-axis
+            const xAxis = d3.axisBottom(x)
+                .ticks(processData.length)
+                .tickFormat(d => d);
+                
+            svg.append("g")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis)
+                .selectAll(".tick text")
+                .attr("class", "axis-text");
+        }
+
+
+        createGanttChart(inputString);
+        
+    </script>
+    </body>
+</html>
